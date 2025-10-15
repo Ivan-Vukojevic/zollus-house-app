@@ -1,0 +1,15 @@
+# Robots.txt for Zollus House App
+# This file tells search engine crawlers which pages or files they can or can't request from your site
+
+User-agent: *
+Allow: /
+
+# Allow all bots to access the site
+# Disallow: /admin/
+# Disallow: /private/
+
+# Sitemap location (you can add this later when you create a sitemap)
+# Sitemap: https://yourdomain.com/sitemap.xml
+
+# Common crawl delays (optional)
+# Crawl-delay: 1

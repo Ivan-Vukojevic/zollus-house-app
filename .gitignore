@@ -12,3 +12,7 @@ yarn-error.log*
 .lighthouse/
 coverage/
 .nyc_output/
+
+# Lighthouse audit files (temporary)
+lighthouse-*.json
+LIGHTHOUSE_*.md
