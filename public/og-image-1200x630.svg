@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a" />
+      <stop offset="1" stop-color="#0ea5a9" />
+    </linearGradient>
+    <style>
+      .bg { fill: url(#g); }
+      .logo { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; font-weight: 700; fill: #fff; }
+      .title { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; font-weight: 700; fill: #ffffff; font-size: 56px; }
+      .subtitle { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; fill: rgba(255,255,255,0.9); font-size: 28px; }
+      .pill { fill: rgba(255,255,255,0.06); stroke: rgba(255,255,255,0.08); }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="630" rx="24"/>
+
+  <!-- left info area -->
+  <g transform="translate(80,90)">
+    <rect class="pill" x="0" y="0" width="440" height="80" rx="12"/>
+    <text x="28" y="50" class="subtitle">Zollus House</text>
+    <text x="0" y="120" class="title">Boutique guesthouse in Osijek</text>
+    <text x="0" y="180" class="subtitle">Comfortable rooms • Private entrance • Hot tub</text>
+  </g>
+
+  <!-- stylized facade / illustration on the right -->
+  <g transform="translate(700,90)">
+    <rect x="0" y="0" width="380" height="220" rx="12" fill="rgba(255,255,255,0.06)" />
+    <rect x="16" y="16" width="348" height="188" rx="8" fill="rgba(255,255,255,0.02)" />
+    <g transform="translate(28,28)">
+      <rect x="0" y="0" width="120" height="88" rx="6" fill="#fff" opacity="0.85" />
+      <rect x="132" y="0" width="188" height="40" rx="6" fill="#fff" opacity="0.85" />
+      <rect x="132" y="52" width="188" height="32" rx="6" fill="#fff" opacity="0.6" />
+    </g>
+  </g>
+
+  <!-- small badge bottom-left -->
+  <g transform="translate(80,480)">
+    <rect x="0" y="0" width="220" height="56" rx="12" fill="#ffffff" opacity="0.06" />
+    <text x="20" y="36" class="subtitle">Osijek · Tvrđa · zollushouse.eu</text>
+  </g>
+
+  <!-- subtle decorative circles -->
+  <circle cx="980" cy="520" r="40" fill="rgba(255,255,255,0.04)" />
+  <circle cx="1040" cy="440" r="24" fill="rgba(255,255,255,0.03)" />
+
+</svg>

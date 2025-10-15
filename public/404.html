@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Page not found — Zollus House</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    :root{--bg:#fff;--fg:#0f172a;--muted:#475569}
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;display:grid;place-items:center;padding:24px;color:var(--fg);background:var(--bg)}
+    main{max-width:56ch;text-align:center}
+    h1{font-size:1.6rem;margin:0 0 0.5rem}
+    p{color:var(--muted);line-height:1.5}
+    a{color:#2563eb;text-decoration:none}
+    .actions{margin-top:1rem}
+    .btn{margin-left:12px;padding:.5rem .75rem;border-radius:6px;border:1px solid #e6eef9;background:#2563eb;color:#fff;cursor:pointer}
+    .btn:hover{filter:brightness(0.95)}
+  </style>
+  <!-- Removed timed meta refresh for accessibility; provide a user-controlled navigation button below -->
+</head>
+<body>
+  <main>
+    <h1>Page not found (404)</h1>
+    <p>The page you're looking for doesn't exist. You can return to the homepage using the link or the button below.</p>
+    <div class="actions">
+      <a href="/">Go to the homepage</a>
+      <button id="goHome" class="btn">Go Home</button>
+    </div>
+  </main>
+
+  <script>
+    // Try to load the SPA index so client-side routing can handle the current path.
+    // This works best if your app's assets are referenced with absolute paths.
+    (function(){
+      // Only attempt if we're not already at the root
+      if (location.pathname !== "/") {
+        fetch('/index.html').then(function(res){
+          if (!res.ok) throw new Error('no index');
+          return res.text();
+        }).then(function(html){
+          // Replace document with the app's index so the SPA can hydrate and handle the route.
+          document.open();
+          document.write(html);
+          document.close();
+        }).catch(function(){
+          // If fetching index.html fails (for example due to base path differences),
+          // fallback to a hash-preserving redirect which works if you use HashRouter.
+          try {
+            var pathname = location.pathname + location.search + location.hash;
+            // Put the original path into the hash so SPA routers using hash can read it.
+            location.replace('/#' + pathname);
+          } catch (e) {
+            // Last-resort: do nothing — user can click 'Go Home' to navigate.
+          }
+        });
+      }
+    })();
+    // Wire the Go Home button (user-controlled navigation)
+    try {
+      var btn = document.getElementById('goHome');
+      if (btn) btn.addEventListener('click', function(){ location.href = '/'; });
+    } catch (e){}
+  </script>
+</body>
+</html>
