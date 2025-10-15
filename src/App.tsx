@@ -13,6 +13,7 @@ import { ContactForm } from "./components/ContactForm";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { ResponsivePicture, buildSrcSet } from "./components/figma/ResponsivePicture";
 import { Toaster } from "./components/ui/sonner";
+import { SpeedInsights } from '@vercel/speed-insights/react';
 // Hero background: default image plus imagetools-generated variants
 import heroDefault from "./assets/hero/hero-background.webp";
 // Generate multiple width variants (WebP), returned as an object map
@@ -335,6 +336,7 @@ export default function App() {
         )}
 
         <Toaster />
+        <SpeedInsights />
       </div>
     );
   }
@@ -580,6 +582,7 @@ export default function App() {
       )}
 
       <Toaster />
+      <SpeedInsights />
     </div>
   );
 }
