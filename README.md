@@ -5,11 +5,20 @@ This project is a modern, responsive static website built with React, Vite, and 
 
 ## Features
 
-- ⚡ Fast Vite + React + TypeScript stack
-- 🎨 Tailwind CSS for styling
+- ⚡ Fast Vite + React + TypeScript stack  
+- 🎨 Tailwind CSS with shadcn/ui components
 - 📱 Responsive design for all devices
-- 🖼️ Optimized image assets
+- 🖼️ **Performance Optimized Images**:
+  - AVIF/WebP formats with fallbacks
+  - Responsive srcsets for all screen sizes  
+  - fetchPriority and runtime preloading
+  - Intrinsic dimensions to prevent CLS
+- 🚀 **Production Optimizations**:
+  - Manual vendor chunking for better caching
+  - Lazy-loaded gallery components
+  - Framer Motion animations
 - 📬 Contact form (Formspree integration)
+- 🛡️ Security: Latest Vite 6.3.6 (vulnerabilities patched)
 - 📝 Clean, accessible markup
 
 ## Getting Started
