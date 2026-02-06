@@ -31,6 +31,8 @@ export default function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const activeSectionRef = useRef(activeSection);
+  const isScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     activeSectionRef.current = activeSection;
@@ -74,12 +76,25 @@ export default function App() {
   const scrollToSection = (section: string) => {
     const element = document.getElementById(section);
     if (element) {
+      // Set flag to disable observer updates during programmatic scroll
+      isScrollingRef.current = true;
+      setActiveSection(section);
+      
+      // Clear any existing timeout
+      if (scrollTimeoutRef.current !== null) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
       const offsetTop = element.offsetTop - (isMobile ? 0 : 80);
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth",
       });
-      setActiveSection(section);
+      
+      // Re-enable observer after scroll animation completes (~800ms for smooth scroll)
+      scrollTimeoutRef.current = window.setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 1000);
     }
   };
 
@@ -91,6 +106,11 @@ export default function App() {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        // Skip observer updates during programmatic scrolling
+        if (isScrollingRef.current) {
+          return;
+        }
+        
         entries.forEach((entry) => {
           ratioById.set(entry.target.id, entry.intersectionRatio);
           topById.set(entry.target.id, entry.boundingClientRect.top);
@@ -130,7 +150,12 @@ export default function App() {
       if (element) observer.observe(element);
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (scrollTimeoutRef.current !== null) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
   }, [isMobile]);
 
   if (isMobile) {
