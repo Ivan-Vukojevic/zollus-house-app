@@ -107,10 +107,10 @@ export default function App() {
         const diff = Math.abs(currentY - lastScrollY.current);
         
         // If scroll position is stable (not changing) or very close to target
-        if (diff < 1 || Math.abs(currentY - targetY) < 5) {
+        if (diff < 2 || Math.abs(currentY - targetY) < 10) {
           stableCount++;
-          // After 2 consecutive stable checks (100ms), consider scroll complete
-          if (stableCount >= 2) {
+          // After 4 consecutive stable checks (200ms), consider scroll complete
+          if (stableCount >= 4) {
             isScrollingRef.current = false;
             if (scrollCheckInterval.current !== null) {
               clearInterval(scrollCheckInterval.current);
@@ -131,7 +131,7 @@ export default function App() {
           clearInterval(scrollCheckInterval.current);
           scrollCheckInterval.current = null;
         }
-      }, 1500);
+      }, 2000);
     }
   };
 
@@ -153,32 +153,52 @@ export default function App() {
           topById.set(entry.target.id, entry.boundingClientRect.top);
         });
 
-        let bestId = activeSectionRef.current;
-        let bestRatio = -1;
+        // Find section with highest intersection ratio
+        let bestId = sections[0];
+        let bestRatio = 0;
         let bestTop = Number.POSITIVE_INFINITY;
 
         sections.forEach((id) => {
           const ratio = ratioById.get(id) ?? 0;
-          if (ratio <= 0) return;
-
           const top = topById.get(id) ?? Number.POSITIVE_INFINITY;
-          const ratioBetter = ratio > bestRatio + 0.02;
-          const ratioClose = Math.abs(ratio - bestRatio) <= 0.02;
-
-          if (ratioBetter || (ratioClose && Math.abs(top) < Math.abs(bestTop))) {
+          
+          // Prefer section with higher visibility
+          if (ratio > bestRatio + 0.05) {
             bestId = id;
             bestRatio = ratio;
             bestTop = top;
+          } 
+          // If similar visibility, prefer the one closer to top
+          else if (Math.abs(ratio - bestRatio) <= 0.05 && ratio > 0) {
+            if (Math.abs(top) < Math.abs(bestTop)) {
+              bestId = id;
+              bestRatio = ratio;
+              bestTop = top;
+            }
           }
         });
 
-        if (bestRatio > 0 && bestId !== activeSectionRef.current) {
+        // If no section is visible, find the one closest to viewport top
+        if (bestRatio === 0) {
+          sections.forEach((id) => {
+            const top = topById.get(id) ?? Number.POSITIVE_INFINITY;
+            if (top < 0 && Math.abs(top) < Math.abs(bestTop)) {
+              bestId = id;
+              bestTop = top;
+            } else if (top >= 0 && top < bestTop) {
+              bestId = id;
+              bestTop = top;
+            }
+          });
+        }
+
+        if (bestId !== activeSectionRef.current) {
           setActiveSection(bestId);
         }
       },
       {
         threshold: thresholds,
-        rootMargin: isMobile ? "0px 0px -35% 0px" : "-80px 0px -35% 0px",
+        rootMargin: isMobile ? "0px 0px -45% 0px" : "-80px 0px -35% 0px",
       },
     );
 
