@@ -33,6 +33,8 @@ export default function App() {
   const activeSectionRef = useRef(activeSection);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<number | null>(null);
+  const lastScrollY = useRef(0);
+  const scrollCheckInterval = useRef<number | null>(null);
 
   useEffect(() => {
     activeSectionRef.current = activeSection;
@@ -80,21 +82,56 @@ export default function App() {
       isScrollingRef.current = true;
       setActiveSection(section);
       
-      // Clear any existing timeout
+      // Clear any existing timeouts and intervals
       if (scrollTimeoutRef.current !== null) {
         clearTimeout(scrollTimeoutRef.current);
       }
+      if (scrollCheckInterval.current !== null) {
+        clearInterval(scrollCheckInterval.current);
+      }
       
       const offsetTop = element.offsetTop - (isMobile ? 0 : 80);
+      const targetY = offsetTop;
+      
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth",
       });
       
-      // Re-enable observer after scroll animation completes (~800ms for smooth scroll)
+      // Monitor scroll completion by checking if scroll position stops changing
+      lastScrollY.current = window.scrollY;
+      let stableCount = 0;
+      
+      scrollCheckInterval.current = window.setInterval(() => {
+        const currentY = window.scrollY;
+        const diff = Math.abs(currentY - lastScrollY.current);
+        
+        // If scroll position is stable (not changing) or very close to target
+        if (diff < 1 || Math.abs(currentY - targetY) < 5) {
+          stableCount++;
+          // After 2 consecutive stable checks (100ms), consider scroll complete
+          if (stableCount >= 2) {
+            isScrollingRef.current = false;
+            if (scrollCheckInterval.current !== null) {
+              clearInterval(scrollCheckInterval.current);
+              scrollCheckInterval.current = null;
+            }
+          }
+        } else {
+          stableCount = 0;
+        }
+        
+        lastScrollY.current = currentY;
+      }, 50);
+      
+      // Fallback timeout in case interval doesn't clear
       scrollTimeoutRef.current = window.setTimeout(() => {
         isScrollingRef.current = false;
-      }, 1000);
+        if (scrollCheckInterval.current !== null) {
+          clearInterval(scrollCheckInterval.current);
+          scrollCheckInterval.current = null;
+        }
+      }, 1500);
     }
   };
 
@@ -154,6 +191,9 @@ export default function App() {
       observer.disconnect();
       if (scrollTimeoutRef.current !== null) {
         clearTimeout(scrollTimeoutRef.current);
+      }
+      if (scrollCheckInterval.current !== null) {
+        clearInterval(scrollCheckInterval.current);
       }
     };
   }, [isMobile]);
