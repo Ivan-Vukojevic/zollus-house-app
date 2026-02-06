@@ -3,6 +3,8 @@
 
 This project is a modern, responsive static website built with React, Vite, and TypeScript for the Zollus House showcase.
 
+Created by frontvisionx.
+
 ## Features
 
 - ⚡ Fast Vite + React + TypeScript stack  

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowUp } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { MobileNavigation } from "./components/MobileNavigation";
@@ -30,34 +30,11 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("welcome");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const activeSectionRef = useRef(activeSection);
 
-  // Preload the hero image srcset to improve LCP
   useEffect(() => {
-    try {
-      const avifSrcSet = buildSrcSet(heroAvif as any, 'w');
-      const webpSrcSet = buildSrcSet(heroVariants as any, 'w');
-      const sizes = '100vw';
-
-      const append = (attrs: Record<string, string>) => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        Object.entries(attrs).forEach(([k, v]) => (link as any)[k] = v);
-        document.head.appendChild(link);
-        return link;
-      };
-
-      const avifLink = append({ imagesrcset: avifSrcSet, imagesizes: sizes, type: 'image/avif' } as any);
-      const webpLink = append({ imagesrcset: webpSrcSet, imagesizes: sizes, type: 'image/webp' } as any);
-
-      return () => {
-        avifLink?.remove();
-        webpLink?.remove();
-      };
-    } catch {
-      // no-op if document/head not available
-    }
-  }, []);
+    activeSectionRef.current = activeSection;
+  }, [activeSection]);
 
   const { scrollYProgress } = useScroll();
   const heroY = useTransform(
@@ -107,25 +84,54 @@ export default function App() {
   };
 
   useEffect(() => {
+    const sections = ["welcome", "about", "gallery", "contact"];
+    const ratioById = new Map<string, number>();
+    const topById = new Map<string, number>();
+    const thresholds = Array.from({ length: 11 }, (_, i) => i / 10);
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+          ratioById.set(entry.target.id, entry.intersectionRatio);
+          topById.set(entry.target.id, entry.boundingClientRect.top);
+        });
+
+        let bestId = activeSectionRef.current;
+        let bestRatio = -1;
+        let bestTop = Number.POSITIVE_INFINITY;
+
+        sections.forEach((id) => {
+          const ratio = ratioById.get(id) ?? 0;
+          if (ratio <= 0) return;
+
+          const top = topById.get(id) ?? Number.POSITIVE_INFINITY;
+          const ratioBetter = ratio > bestRatio + 0.02;
+          const ratioClose = Math.abs(ratio - bestRatio) <= 0.02;
+
+          if (ratioBetter || (ratioClose && Math.abs(top) < Math.abs(bestTop))) {
+            bestId = id;
+            bestRatio = ratio;
+            bestTop = top;
           }
         });
+
+        if (bestRatio > 0 && bestId !== activeSectionRef.current) {
+          setActiveSection(bestId);
+        }
       },
-      { threshold: 0.3, rootMargin: "-80px 0px -80px 0px" },
+      {
+        threshold: thresholds,
+        rootMargin: isMobile ? "0px 0px -35% 0px" : "-80px 0px -35% 0px",
+      },
     );
 
-    const sections = ["welcome", "about", "gallery", "contact"];
     sections.forEach((section) => {
       const element = document.getElementById(section);
       if (element) observer.observe(element);
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [isMobile]);
 
   if (isMobile) {
     // Mobile layout (existing implementation)

@@ -42,7 +42,6 @@ export function ResponsivePicture(props: ResponsivePictureProps) {
   const [didError, setDidError] = useState(false)
 
   const resolvedLoading = priority ? 'eager' : loading ?? 'lazy'
-  const fetchPriority: 'high' | 'low' | 'auto' = priority ? 'high' : 'auto'
 
   return (
     <picture className={className}>
@@ -56,7 +55,6 @@ export function ResponsivePicture(props: ResponsivePictureProps) {
           className={imgClassName}
           decoding={decoding}
           loading={resolvedLoading}
-          fetchPriority={fetchPriority}
           width={width}
           height={height}
           data-original-url={imgSrc}
@@ -68,7 +66,6 @@ export function ResponsivePicture(props: ResponsivePictureProps) {
           className={imgClassName}
           decoding={decoding}
           loading={resolvedLoading}
-          fetchPriority={fetchPriority}
           width={width}
           height={height}
           onError={() => setDidError(true)}
