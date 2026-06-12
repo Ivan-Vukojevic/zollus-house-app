@@ -69,6 +69,9 @@ export function DesktopContactForm({ className = '' }: DesktopContactFormProps) 
       });
 
       if (res.ok) {
+        window.gtag?.("event", "conversion", {
+          send_to: "AW-18227859729/KXL0CNK6vr0cEJGi3PND"
+        });
         toast.success("Message sent successfully! We'll get back to you soon.");
         setFormData({ name: '', email: '', message: '' });
         setErrors({});
