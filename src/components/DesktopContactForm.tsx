@@ -69,9 +69,13 @@ export function DesktopContactForm({ className = '' }: DesktopContactFormProps) 
       });
 
       if (res.ok) {
-        window.gtag?.("event", "conversion", {
-          send_to: "AW-18227859729/hO3bCKbOn7wcEJGi3PND"
-        });
+        if (window.gtag) {
+          window.gtag('event', 'conversion', {
+            send_to: 'AW-18227859729/-YLcCMbwzMkcEJGi3PND',
+            value: 1.0,
+            currency: 'EUR'
+          });
+        }
         toast.success("Message sent successfully! We'll get back to you soon.");
         setFormData({ name: '', email: '', message: '' });
         setErrors({});
