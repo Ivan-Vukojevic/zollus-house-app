@@ -70,7 +70,7 @@ export function ContactForm({ className = '' }: ContactFormProps) {
       if (res.ok) {
         if (window.gtag) {
           window.gtag('event', 'Traženje ponude', {
-            'send_to': 'AW-18227859729/zYIiCMm4w8kcEPiPx_VD',
+            'send_to': 'AW-18227859729/FUrACNmew88cEJGi3PND',
             'value': 1,
             'currency': 'EUR'
           });
