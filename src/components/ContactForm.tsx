@@ -70,9 +70,9 @@ export function ContactForm({ className = '' }: ContactFormProps) {
       if (res.ok) {
         if (window.gtag) {
           window.gtag('event', 'Traženje ponude', {
-            send_to: 'AW-18227859729/zYIiCMm4w8kcEPiPx_VD',
-            value: 1.0,
-            currency: 'EUR'
+            'send_to': 'AW-18227859729/zYIiCMm4w8kcEPiPx_VD',
+            'value': 1,
+            'currency': 'EUR'
           });
         }
         toast.success("Message sent successfully! We'll get back to you soon.");
