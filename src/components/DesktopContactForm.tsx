@@ -71,7 +71,7 @@ export function DesktopContactForm({ className = '' }: DesktopContactFormProps) 
       if (res.ok) {
         if (window.gtag) {
           window.gtag('event', 'Traženje ponude', {
-            send_to: 'AW-18227859729/-YLcCMbwzMkcEJGi3PND',
+            send_to: 'AW-18227859729/zYIiCMm4w8kcEPiPx_VD',
             value: 1.0,
             currency: 'EUR'
           });
